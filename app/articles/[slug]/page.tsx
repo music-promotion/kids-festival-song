@@ -23,44 +23,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     }
   }
 
-  const articleUrl = `https://${siteConfig.domain}/articles/${slug}`
-
   return {
     title: `${article.title} - ${siteConfig.name}`,
     description: article.description,
-    keywords: article.keywords,
-    authors: [{ name: siteConfig.name }],
-    creator: siteConfig.name,
-    publisher: siteConfig.name,
-    
-    // Open Graph
-    openGraph: {
-      type: "article",
-      locale: "zh_CN",
-      url: articleUrl,
-      title: article.title,
-      description: article.description,
-      siteName: siteConfig.name,
-      publishedTime: article.date,
-      authors: [siteConfig.name],
-      tags: article.keywords,
-    },
-    
-    // Twitter Card
-    twitter: {
-      card: "summary_large_image",
-      title: article.title,
-      description: article.description,
-    },
-    
-    // Canonical URL
-    alternates: {
-      canonical: articleUrl,
-    },
+    keywords: article.keywords.join(', '),
   }
 }
-
-
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -72,40 +40,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-red-50 to-white">
-      // JSON-LD 结构化数据
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: article.title,
-    description: article.description,
-    datePublished: article.date,
-    dateModified: article.date,
-    author: {
-      "@type": "Organization",
-      name: siteConfig.name,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: siteConfig.name,
-      url: `https://${siteConfig.domain}`,
-    },
-    mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": `https://${siteConfig.domain}/articles/${slug}`,
-    },
-    keywords: article.keywords.join(", "),
-    articleSection: article.category,
-    inLanguage: "zh-CN",
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900">
-      {/* JSON-LD */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
